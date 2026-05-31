@@ -5,6 +5,7 @@ import { makeMove } from "../../store";
 
 function Field({ field }) {
   const handleCellClick = (index) => {
+    console.log("Cell clicked:", index);
     store.dispatch(makeMove(index));
   };
 

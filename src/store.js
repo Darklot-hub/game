@@ -1,98 +1,109 @@
-import { createStore } from 'redux';
+import { createStore } from "redux";
 
-// Начальное состояние
 const initialState = {
-  currentPlayer: 'X',   // 'X' или 'O'
-  isGameEnded: false,
-  isDraw: false,
-  field: Array(9).fill(''),
+	currentPlayer: "X",
+	isGameEnded: false,
+	isDraw: false,
+	field: Array(9).fill(""),
 };
 
-// Типы действий
 export const ActionTypes = {
-  MAKE_MOVE: 'MAKE_MOVE',
-  RESTART: 'RESTART',
+	MAKE_MOVE: "MAKE_MOVE",
+	RESTART: "RESTART",
 };
 
-// Action creators
 export const makeMove = (index) => ({
-  type: ActionTypes.MAKE_MOVE,
-  payload: index,
+	type: ActionTypes.MAKE_MOVE,
+	payload: { index }, // оборачиваем в объект
 });
 
 export const restart = () => ({
-  type: ActionTypes.RESTART,
+	type: ActionTypes.RESTART,
 });
 
-// Вспомогательные функции для проверки победы/ничьи
 const WIN_PATTERNS = [
-  [0, 1, 2], [3, 4, 5], [6, 7, 8],
-  [0, 3, 6], [1, 4, 7], [2, 5, 8],
-  [0, 4, 8], [2, 4, 6],
+	[0, 1, 2],
+	[3, 4, 5],
+	[6, 7, 8],
+	[0, 3, 6],
+	[1, 4, 7],
+	[2, 5, 8],
+	[0, 4, 8],
+	[2, 4, 6],
 ];
 
 const checkWinner = (field) => {
-  for (let pattern of WIN_PATTERNS) {
-    const [a, b, c] = pattern;
-    if (field[a] && field[a] === field[b] && field[a] === field[c]) {
-      return field[a];
-    }
-  }
-  return null;
+	for (let pattern of WIN_PATTERNS) {
+		const [a, b, c] = pattern;
+		if (field[a] && field[a] === field[b] && field[a] === field[c]) {
+			return field[a];
+		}
+	}
+	return null;
 };
 
-const checkDraw = (field) => field.every(cell => cell !== '');
+const checkDraw = (field) => field.every((cell) => cell !== "");
 
-// Редьюсер (чистая функция)
 const gameReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case ActionTypes.MAKE_MOVE: {
-      const { index } = action.payload;
-      // Если клетка уже занята или игра завершена – не меняем состояние
-      if (state.field[index] !== '' || state.isGameEnded || state.isDraw) {
-        return state;
-      }
+	console.log("Reducer received action:", action.type, action.payload);
 
-      const newField = [...state.field];
-      newField[index] = state.currentPlayer;
+	switch (action.type) {
+		case ActionTypes.MAKE_MOVE: {
+			const { index } = action.payload;
+			console.log("Making move at index:", index);
+			console.log("Current state:", state);
 
-      const winner = checkWinner(newField);
-      const draw = !winner && checkDraw(newField);
+			if (
+				state.field[index] !== "" ||
+				state.isGameEnded ||
+				state.isDraw
+			) {
+				console.log("Move invalid: cell occupied or game ended");
+				return state;
+			}
 
-      if (winner) {
-        return {
-          ...state,
-          field: newField,
-          isGameEnded: true,
-        };
-      }
+			const newField = [...state.field];
+			newField[index] = state.currentPlayer;
+			console.log("New field:", newField);
 
-      if (draw) {
-        return {
-          ...state,
-          field: newField,
-          isDraw: true,
-        };
-      }
+			const winner = checkWinner(newField);
+			const draw = !winner && checkDraw(newField);
 
-      // Смена игрока
-      const nextPlayer = state.currentPlayer === 'X' ? 'O' : 'X';
-      return {
-        ...state,
-        field: newField,
-        currentPlayer: nextPlayer,
-      };
-    }
+			if (winner) {
+				console.log("Winner:", winner);
+				return {
+					...state,
+					field: newField,
+					isGameEnded: true,
+				};
+			}
 
-    case ActionTypes.RESTART:
-      return initialState;
+			if (draw) {
+				console.log("Draw");
+				return {
+					...state,
+					field: newField,
+					isDraw: true,
+				};
+			}
 
-    default:
-      return state;
-  }
+			const nextPlayer = state.currentPlayer === "X" ? "O" : "X";
+			console.log("Next player:", nextPlayer);
+			return {
+				...state,
+				field: newField,
+				currentPlayer: nextPlayer,
+			};
+		}
+
+		case ActionTypes.RESTART:
+			console.log("Restarting game");
+			return initialState;
+
+		default:
+			return state;
+	}
 };
 
-// Создаём store
 const store = createStore(gameReducer);
-
 export default store;
