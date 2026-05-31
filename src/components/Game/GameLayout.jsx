@@ -1,11 +1,17 @@
-import PropTypes from 'prop-types';
-import styles from './Game.module.css';
+import PropTypes from "prop-types";
+import styles from "./Game.module.css";
+import store from "../../store";
+import { restart } from "../../store";
 
-function GameLayout({ children, onRestart }) {
+function GameLayout({ children }) {
+  const handleRestart = () => {
+    store.dispatch(restart());
+  };
+
   return (
     <div className={styles.game}>
       {children}
-      <button className={styles.restartButton} onClick={onRestart}>
+      <button className={styles.restartButton} onClick={handleRestart}>
         Начать заново
       </button>
     </div>
@@ -14,7 +20,6 @@ function GameLayout({ children, onRestart }) {
 
 GameLayout.propTypes = {
   children: PropTypes.node.isRequired,
-  onRestart: PropTypes.func.isRequired,
 };
 
 export default GameLayout;
