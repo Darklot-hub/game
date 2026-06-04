@@ -1,23 +1,13 @@
-import { useState, useEffect } from 'react';
-import store from '../../store';
-import GameLayout from './GameLayout';
-import Information from '../Information/Information';
-import Field from '../Field/Field';
+import { useSelector } from "react-redux";
+import GameLayout from "./GameLayout";
+import Information from "../Information/Information";
+import Field from "../Field/Field";
 
 function Game() {
-  // Состояние для хранения текущего состояния store
-  const [gameState, setGameState] = useState(() => store.getState());
-
-  useEffect(() => {
-    // Подписываемся на изменения store
-    const unsubscribe = store.subscribe(() => {
-      console.log('Store changed, new state:', store.getState());
-      setGameState(store.getState()); // обновляем состояние
-    });
-    return unsubscribe;
-  }, []);
-
-  const { currentPlayer, isGameEnded, isDraw, field } = gameState;
+  const currentPlayer = useSelector((state) => state.currentPlayer);
+  const isGameEnded = useSelector((state) => state.isGameEnded);
+  const isDraw = useSelector((state) => state.isDraw);
+  const field = useSelector((state) => state.field);
 
   return (
     <GameLayout>
