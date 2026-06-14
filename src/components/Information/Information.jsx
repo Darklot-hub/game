@@ -1,20 +1,17 @@
-import PropTypes from "prop-types";
+import React, { Component } from "react";
 import InformationLayout from "./InformationLayout";
 
-function Information({ currentPlayer, isGameEnded, isDraw }) {
-  return (
-    <InformationLayout
-      currentPlayer={currentPlayer}
-      isGameEnded={isGameEnded}
-      isDraw={isDraw}
-    />
-  );
+class Information extends Component {
+  render() {
+    const { currentPlayer, isGameEnded, isDraw } = this.props;
+    return (
+      <InformationLayout
+        currentPlayer={currentPlayer}
+        isGameEnded={isGameEnded}
+        isDraw={isDraw}
+      />
+    );
+  }
 }
-
-Information.propTypes = {
-  currentPlayer: PropTypes.string.isRequired,
-  isGameEnded: PropTypes.bool.isRequired,
-  isDraw: PropTypes.bool.isRequired,
-};
 
 export default Information;

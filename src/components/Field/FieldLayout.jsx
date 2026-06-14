@@ -1,25 +1,22 @@
-import PropTypes from "prop-types";
-import styles from "./Field.module.css";
+import React, { Component } from 'react';
 
-function FieldLayout({ field, onCellClick }) {
-  return (
-    <div className={styles.field}>
-      {field.map((value, index) => (
-        <button
-          key={index}
-          className={styles.cell}
-          onClick={() => onCellClick(index)}
-        >
-          {value}
-        </button>
-      ))}
-    </div>
-  );
+class FieldLayout extends Component {
+  render() {
+    const { field, onCellClick } = this.props;
+    return (
+      <div className="grid grid-cols-3 gap-1 bg-gray-700 p-1 rounded">
+        {field.map((value, idx) => (
+          <button
+            key={idx}
+            onClick={() => onCellClick(idx)}
+            className="w-24 h-24 bg-white flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-gray-100 focus:outline-none"
+          >
+            {value}
+          </button>
+        ))}
+      </div>
+    );
+  }
 }
-
-FieldLayout.propTypes = {
-  field: PropTypes.arrayOf(PropTypes.string).isRequired,
-  onCellClick: PropTypes.func.isRequired,
-};
 
 export default FieldLayout;

@@ -1,24 +1,30 @@
-import { useSelector } from "react-redux";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import GameLayout from "./GameLayout";
 import Information from "../Information/Information";
 import Field from "../Field/Field";
 
-function Game() {
-  const currentPlayer = useSelector((state) => state.currentPlayer);
-  const isGameEnded = useSelector((state) => state.isGameEnded);
-  const isDraw = useSelector((state) => state.isDraw);
-  const field = useSelector((state) => state.field);
-
-  return (
-    <GameLayout>
-      <Information
-        currentPlayer={currentPlayer}
-        isGameEnded={isGameEnded}
-        isDraw={isDraw}
-      />
-      <Field field={field} />
-    </GameLayout>
-  );
+class Game extends Component {
+  render() {
+    const { currentPlayer, isGameEnded, isDraw, field } = this.props;
+    return (
+      <GameLayout>
+        <Information
+          currentPlayer={currentPlayer}
+          isGameEnded={isGameEnded}
+          isDraw={isDraw}
+        />
+        <Field field={field} />
+      </GameLayout>
+    );
+  }
 }
 
-export default Game;
+const mapStateToProps = (state) => ({
+  currentPlayer: state.currentPlayer,
+  isGameEnded: state.isGameEnded,
+  isDraw: state.isDraw,
+  field: state.field,
+});
+
+export default connect(mapStateToProps)(Game);

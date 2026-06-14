@@ -1,20 +1,21 @@
-import { useDispatch } from "react-redux";
-import PropTypes from "prop-types";
-import FieldLayout from "./FieldLayout";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 import { makeMove } from "../../store";
+import FieldLayout from "./FieldLayout";
 
-function Field({ field }) {
-  const dispatch = useDispatch();
-
-  const handleCellClick = (index) => {
-    dispatch(makeMove(index));
+class Field extends Component {
+  handleCellClick = (index) => {
+    this.props.makeMove(index);
   };
 
-  return <FieldLayout field={field} onCellClick={handleCellClick} />;
+  render() {
+    const { field } = this.props;
+    return <FieldLayout field={field} onCellClick={this.handleCellClick} />;
+  }
 }
 
-Field.propTypes = {
-  field: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
+const mapDispatchToProps = (dispatch) => ({
+  makeMove: (index) => dispatch(makeMove(index)),
+});
 
-export default Field;
+export default connect(null, mapDispatchToProps)(Field);
